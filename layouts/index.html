@@ -1,0 +1,26 @@
+{{ define "main" }}
+
+<section class="section">
+  <div class="container">
+    <div class="hero">
+      <div class="hero-body">
+        <h1 class="title">{{ .Title }}</h1>
+        <h2 class="subtitle">{{ .Site.Params.subtitle | markdownify }}</h2>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="columns is-multiline is-8">
+    {{ range $.Site.Data.products }}
+      <div class="column is-one-quarter">
+        {{ partial "product-preview" . }}
+      </div>
+    {{ end }}
+    </div>
+  </div>
+</section>
+
+{{ end }}

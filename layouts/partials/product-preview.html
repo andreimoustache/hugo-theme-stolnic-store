@@ -1,0 +1,29 @@
+<div class="card">
+  <div class="card-image">
+    <figure class="image is-4by3">
+      {{- range .images -}}
+      <img src="{{ .url }}" alt="{{ .title }}">
+      {{- end -}}
+    </figure>
+  </div>
+  <div class="card-content">
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <span class="title is-5">{{ .name }}</span>
+        </div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <span class="is-size-6">{{ .price }} {{ $.Site.Params.currency }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">{{ .description }}</div>
+  </div>
+  <div class="card-footer">
+    <span class="card-footer-item">0</span>
+    <a href="#" class="card-footer-item">Add to cart</a>
+  </div>
+</div>
