@@ -1,0 +1,15 @@
+{
+  "name": "hugo-theme-stolnic-store",
+  "version": "1.0.0",
+  "description": "A Hugo store theme",
+  "author": "Andrei Mustață <andrei.mustata@gmail.com>",
+  "private": true,
+  "license": "MIT",
+  "dependencies": {
+    "@fullhuman/postcss-purgecss": "^2.1.2",
+    "bulma": "^0.8.1",
+    "postcss-cli": "^7.1.0",
+    "purgecss": "^2.1.2",
+    "sass": "^1.26.3"
+  }
+}
