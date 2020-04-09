@@ -5,6 +5,9 @@
   "author": "Andrei Mustață <andrei.mustata@gmail.com>",
   "private": true,
   "license": "MIT",
+  "scripts": {
+    "build:css": "sass assets/scss/stolnic.scss assets/css/stolnic.css"
+  },
   "dependencies": {
     "@fullhuman/postcss-purgecss": "^2.1.2",
     "bulma": "^0.8.1",
