@@ -1,0 +1,6 @@
+{
+  "id": "{{ .Id }}",
+  "name": "{{ .Title }}",
+  "description": "{{ .Params.description }}",
+  "price": {{ .Params.price }}
+}
