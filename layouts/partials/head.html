@@ -14,10 +14,12 @@
   {{- template "_internal/opengraph.html" . -}}
   {{- template "_internal/twitter_cards.html" . -}}
 
-  {{ $styles := resources.Get "css/stolnic.css" | postCSS | minify | fingerprint "md5" }}
+  {{ $styles := resources.Get "css/stolnic.css" | minify | fingerprint "md5" }}
   <link rel="stylesheet" href="{{ $styles.Permalink }}" media="screen">
 
   <script src="https://unpkg.com/systemjs@6.3.0/dist/s.min.js"></script>
+  <script src="https://unpkg.com/systemjs@6.3.0/dist/extras/named-register.min.js"></script>
   <script src="{{ (resources.Get "js/app.js").Permalink }}"></script>
+  <script src="{{ (resources.Get "js/main.js").Permalink }}"></script>
 
 </head>
