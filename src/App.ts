@@ -4,17 +4,24 @@ import {Product} from './Models/Product';
 export class App {
   products: Map<string, Product>;
   shoppingCart: ShoppingCart;
+  productsEndpoint: string;
 
-  constructor() {
-    this.products = this.getProducts();
-    this.shoppingCart = new ShoppingCart();
-
-    this.bindToButtons();
+  constructor(
+    products = new Map<string, Product>(),
+    shoppingCart = new ShoppingCart(),
+    productsEndpoint = '/products/index.json'
+  ) {
+    this.products = products;
+    this.shoppingCart = shoppingCart;
+    this.productsEndpoint = productsEndpoint;
   }
 
-  getProducts(): Map<string, Product> {
-    fetch('/products/index.json').then(r => r.json());
-    return new Map<string, Product>();
+  async initialise() {
+    this.products = await this.getProducts();
+  }
+
+  getProducts(): Promise<Map<string, Product>> {
+    return fetch(this.productsEndpoint).then(r => r.json());
   }
 
   bindToButtons() {

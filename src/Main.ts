@@ -1,3 +1,4 @@
 System.import('src/App').then(module => {
-  new module.App();
+  const app = new module.App();
+  app.initialise();
 });
