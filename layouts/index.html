@@ -13,12 +13,19 @@
 
 <section class="section">
   <div class="container">
-    <div class="columns is-multiline is-8">
-    {{ range $.Site.Data.products }}
-      <div class="column is-one-quarter">
-        {{ partial "product-preview" . }}
+    <div class="columns">
+      <div class="column">
+        <div class="columns is-multiline is-8">
+          {{ range $.Site.Data.products }}
+            <div class="column is-one-quarter">
+              {{ partial "product-preview" . }}
+            </div>
+          {{ end }}
+          </div>
       </div>
-    {{ end }}
+      <div class="column is-one-quarter">
+        {{ partial "shopping-cart" }}
+      </div>
     </div>
   </div>
 </section>
