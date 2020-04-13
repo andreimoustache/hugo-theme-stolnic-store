@@ -1,6 +1,6 @@
-import Product from './Product';
+import {Product} from './Product';
 
-export default class ShoppingCart {
+export class ShoppingCart {
   items = new Map<string, CartLine>();
   totalPrice = 0.0;
 
