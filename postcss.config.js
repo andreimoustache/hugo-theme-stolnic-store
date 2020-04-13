@@ -2,7 +2,7 @@ module.exports = {
   plugins: {
     '@fullhuman/postcss-purgecss': {
       content: [
-        './themes/stolnic/layouts/**/*.html'
+        './layouts/**/*.html'
       ],
       whitelist: [
         'highlight',

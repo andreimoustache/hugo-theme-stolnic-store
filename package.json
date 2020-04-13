@@ -6,8 +6,9 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "npm run build:css && npm run build:js",
+    "build": "npm run build:css && npm run build:postcss && npm run build:js",
     "build:css": "sass assets/scss/stolnic.scss assets/css/stolnic.css",
+    "build:postcss": "postcss assets/css/stolnic.css -o assets/css/stolnic.css",
     "build:js": "tsc",
     "check": "gts check",
     "clean": "gts clean",
