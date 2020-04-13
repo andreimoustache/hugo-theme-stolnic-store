@@ -9,7 +9,7 @@ export class App {
   constructor(
     products = new Map<string, Product>(),
     shoppingCart = new ShoppingCart(),
-    productsEndpoint = '/products/index.json'
+    productsEndpoint = 'http://www.mocky.io/v2/5e94533a3100004b005e300f'
   ) {
     this.products = products;
     this.shoppingCart = shoppingCart;
@@ -18,6 +18,7 @@ export class App {
 
   async initialise() {
     this.products = await this.getProducts();
+    this.bindToButtons();
   }
 
   getProducts(): Promise<Map<string, Product>> {
@@ -25,8 +26,13 @@ export class App {
   }
 
   bindToButtons() {
-    // const addToCartButtons = Array.from(document.querySelectorAll('.add-to-cart'));
-    // addToCartButtons.forEach(b => console.log(b));
-    throw new Error('Method not implemented.');
+    for (const [id, product] of Object.entries(this.products)) {
+      document
+        .querySelector(`[data-product-id="${id}"]`)
+        ?.querySelector('.add-to-cart')
+        ?.addEventListener('click', () => {
+          this.shoppingCart.addProduct(product);
+        });
+    }
   }
 }

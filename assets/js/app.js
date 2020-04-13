@@ -114,7 +114,7 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_3, con
                 function App(products, shoppingCart, productsEndpoint) {
                     if (products === void 0) { products = new Map(); }
                     if (shoppingCart === void 0) { shoppingCart = new ShoppingCart_1.ShoppingCart(); }
-                    if (productsEndpoint === void 0) { productsEndpoint = '/products/index.json'; }
+                    if (productsEndpoint === void 0) { productsEndpoint = 'http://www.mocky.io/v2/5e94533a3100004b005e300f'; }
                     this.products = products;
                     this.shoppingCart = shoppingCart;
                     this.productsEndpoint = productsEndpoint;
@@ -129,6 +129,7 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_3, con
                                     return [4 /*yield*/, this.getProducts()];
                                 case 1:
                                     _a.products = _b.sent();
+                                    this.bindToButtons();
                                     return [2 /*return*/];
                             }
                         });
@@ -138,9 +139,18 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_3, con
                     return fetch(this.productsEndpoint).then(function (r) { return r.json(); });
                 };
                 App.prototype.bindToButtons = function () {
-                    // const addToCartButtons = Array.from(document.querySelectorAll('.add-to-cart'));
-                    // addToCartButtons.forEach(b => console.log(b));
-                    throw new Error('Method not implemented.');
+                    var _this = this;
+                    var _a, _b;
+                    var _loop_1 = function (id, product) {
+                        (_b = (_a = document
+                            .querySelector("[data-product-id=\"" + id + "\"]")) === null || _a === void 0 ? void 0 : _a.querySelector('.add-to-cart')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', function () {
+                            _this.shoppingCart.addProduct(product);
+                        });
+                    };
+                    for (var _i = 0, _c = Object.entries(this.products); _i < _c.length; _i++) {
+                        var _d = _c[_i], id = _d[0], product = _d[1];
+                        _loop_1(id, product);
+                    }
                 };
                 return App;
             }());
