@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card product" data-product-id="{{ .id }}">
   <div class="card-image">
     <figure class="image is-4by3">
       {{- range .images -}}
@@ -23,7 +23,7 @@
     <div class="content">{{ .description }}</div>
   </div>
   <div class="card-footer">
-    <span class="card-footer-item">0</span>
-    <a href="#" class="card-footer-item">Add to cart</a>
+    <span class="card-footer-item quantity">1</span>
+    <a class="card-footer-item add-to-cart">Add to cart</a>
   </div>
 </div>

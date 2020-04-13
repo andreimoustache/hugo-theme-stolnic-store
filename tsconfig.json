@@ -1,0 +1,16 @@
+{
+  "extends": "./node_modules/gts/tsconfig-google.json",
+  "compilerOptions": {
+    "module": "system",
+    "target": "es5",
+    "lib": [
+      "dom"
+    ],
+    "rootDir": ".",
+    "outFile": "assets/js/app.js"
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ]
+}
