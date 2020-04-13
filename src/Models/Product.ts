@@ -1,4 +1,4 @@
-export default class Product {
+export class Product {
   id: string;
   title: string;
   price = 0.0;
