@@ -17,6 +17,7 @@
   {{ $styles := resources.Get "css/stolnic.css" | postCSS | minify | fingerprint "md5" }}
   <link rel="stylesheet" href="{{ $styles.Permalink }}" media="screen">
 
-  {{ partial "google_analytics_async.html" . }}
+  <script src="https://unpkg.com/systemjs@6.3.0/dist/s.min.js"></script>
+  <script src="{{ (resources.Get "js/app.js").Permalink }}"></script>
 
 </head>
