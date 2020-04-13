@@ -11,11 +11,21 @@ declare module "src/Models/Product" {
         title: string;
     }
 }
+declare module "src/Models/View" {
+    export class View {
+        element: Element;
+        constructor(element: Element);
+        updateValue(selector: string, value: string): void;
+    }
+}
 declare module "src/Models/ShoppingCart" {
     import { Product } from "src/Models/Product";
+    import { View } from "src/Models/View";
     export class ShoppingCart {
         items: Map<string, CartLine>;
         totalPrice: number;
+        view: View;
+        constructor(domSelector: string);
         addProduct(item: Product, quantity?: number, note?: string): void;
         removeProduct(item: Product): void;
     }

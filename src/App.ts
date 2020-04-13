@@ -8,8 +8,8 @@ export class App {
 
   constructor(
     products = new Map<string, Product>(),
-    shoppingCart = new ShoppingCart(),
-    productsEndpoint = 'http://www.mocky.io/v2/5e94533a3100004b005e300f'
+    shoppingCart = new ShoppingCart('#shopping-cart'),
+    productsEndpoint = 'http://www.mocky.io/v2/5e946fc53100002d005e3155'
   ) {
     this.products = products;
     this.shoppingCart = shoppingCart;
@@ -27,11 +27,15 @@ export class App {
 
   bindToButtons() {
     for (const [id, product] of Object.entries(this.products)) {
-      document
-        .querySelector(`[data-product-id="${id}"]`)
+      const productCard = document.querySelector(`[data-product-id="${id}"]`);
+      productCard
         ?.querySelector('.add-to-cart')
         ?.addEventListener('click', () => {
-          this.shoppingCart.addProduct(product);
+          const quantity = productCard.querySelector('.quantity')
+            ?.textContent as string;
+          const note = productCard.querySelector('.note')
+            ?.textContent as string;
+          this.shoppingCart.addProduct(product, parseInt(quantity, 10), note);
         });
     }
   }

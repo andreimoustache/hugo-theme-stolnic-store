@@ -59,31 +59,64 @@ System.register("src/Models/Product", [], function (exports_1, context_1) {
         }
     };
 });
-System.register("src/Models/ShoppingCart", [], function (exports_2, context_2) {
+System.register("src/Models/View", [], function (exports_2, context_2) {
     "use strict";
-    var ShoppingCart, CartLine;
+    var View;
     var __moduleName = context_2 && context_2.id;
     return {
         setters: [],
         execute: function () {
+            View = /** @class */ (function () {
+                function View(element) {
+                    this.element = element;
+                }
+                View.prototype.updateValue = function (selector, value) {
+                    var el = this.element.querySelector(selector);
+                    if (!el) {
+                        console.error("No element found for " + selector + ".");
+                        return;
+                    }
+                    el.textContent = value;
+                };
+                return View;
+            }());
+            exports_2("View", View);
+        }
+    };
+});
+System.register("src/Models/ShoppingCart", ["src/Models/View"], function (exports_3, context_3) {
+    "use strict";
+    var View_1, ShoppingCart, CartLine;
+    var __moduleName = context_3 && context_3.id;
+    return {
+        setters: [
+            function (View_1_1) {
+                View_1 = View_1_1;
+            }
+        ],
+        execute: function () {
             ShoppingCart = /** @class */ (function () {
-                function ShoppingCart() {
+                function ShoppingCart(domSelector) {
                     this.items = new Map();
                     this.totalPrice = 0.0;
+                    this.view = new View_1.View(document.querySelector(domSelector));
                 }
                 ShoppingCart.prototype.addProduct = function (item, quantity, note) {
                     if (quantity === void 0) { quantity = 1; }
                     if (note === void 0) { note = ''; }
-                    this.items.set(item.id, new CartLine(item, quantity, note));
-                    this.totalPrice += item.price;
+                    var line = new CartLine(item, quantity, note);
+                    this.items.set(item.id, line);
+                    this.totalPrice += line.total;
+                    this.view.updateValue('.total', this.totalPrice.toString());
                 };
                 ShoppingCart.prototype.removeProduct = function (item) {
                     this.items.delete(item.id);
                     this.totalPrice -= item.price;
+                    this.view.updateValue('.total', this.totalPrice.toString());
                 };
                 return ShoppingCart;
             }());
-            exports_2("ShoppingCart", ShoppingCart);
+            exports_3("ShoppingCart", ShoppingCart);
             CartLine = /** @class */ (function () {
                 function CartLine(item, quantity, note) {
                     if (quantity === void 0) { quantity = 0; }
@@ -95,14 +128,14 @@ System.register("src/Models/ShoppingCart", [], function (exports_2, context_2) {
                 }
                 return CartLine;
             }());
-            exports_2("CartLine", CartLine);
+            exports_3("CartLine", CartLine);
         }
     };
 });
-System.register("src/App", ["src/Models/ShoppingCart"], function (exports_3, context_3) {
+System.register("src/App", ["src/Models/ShoppingCart"], function (exports_4, context_4) {
     "use strict";
     var ShoppingCart_1, App;
-    var __moduleName = context_3 && context_3.id;
+    var __moduleName = context_4 && context_4.id;
     return {
         setters: [
             function (ShoppingCart_1_1) {
@@ -113,8 +146,8 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_3, con
             App = /** @class */ (function () {
                 function App(products, shoppingCart, productsEndpoint) {
                     if (products === void 0) { products = new Map(); }
-                    if (shoppingCart === void 0) { shoppingCart = new ShoppingCart_1.ShoppingCart(); }
-                    if (productsEndpoint === void 0) { productsEndpoint = 'http://www.mocky.io/v2/5e94533a3100004b005e300f'; }
+                    if (shoppingCart === void 0) { shoppingCart = new ShoppingCart_1.ShoppingCart('#shopping-cart'); }
+                    if (productsEndpoint === void 0) { productsEndpoint = 'http://www.mocky.io/v2/5e946fc53100002d005e3155'; }
                     this.products = products;
                     this.shoppingCart = shoppingCart;
                     this.productsEndpoint = productsEndpoint;
@@ -140,26 +173,31 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_3, con
                 };
                 App.prototype.bindToButtons = function () {
                     var _this = this;
-                    var _a, _b;
+                    var _a;
                     var _loop_1 = function (id, product) {
-                        (_b = (_a = document
-                            .querySelector("[data-product-id=\"" + id + "\"]")) === null || _a === void 0 ? void 0 : _a.querySelector('.add-to-cart')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', function () {
-                            _this.shoppingCart.addProduct(product);
+                        var productCard = document.querySelector("[data-product-id=\"" + id + "\"]");
+                        (_a = productCard === null || productCard === void 0 ? void 0 : productCard.querySelector('.add-to-cart')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', function () {
+                            var _a, _b;
+                            var quantity = (_a = productCard.querySelector('.quantity')) === null || _a === void 0 ? void 0 : _a.textContent;
+                            var note = (_b = productCard.querySelector('.note')) === null || _b === void 0 ? void 0 : _b.textContent;
+                            _this.shoppingCart.addProduct(product, parseInt(quantity, 10), note);
                         });
                     };
-                    for (var _i = 0, _c = Object.entries(this.products); _i < _c.length; _i++) {
-                        var _d = _c[_i], id = _d[0], product = _d[1];
+                    for (var _i = 0, _b = Object.entries(this.products); _i < _b.length; _i++) {
+                        var _c = _b[_i], id = _c[0], product = _c[1];
                         _loop_1(id, product);
                     }
                 };
                 return App;
             }());
-            exports_3("App", App);
+            exports_4("App", App);
         }
     };
 });
 System.import('src/App').then(function (module) {
-    var app = new module.App();
-    app.initialise();
+    window.addEventListener('load', function () {
+        var app = new module.App();
+        app.initialise();
+    });
 });
 //# sourceMappingURL=app.js.map
