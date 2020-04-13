@@ -1,4 +1,6 @@
 System.import('src/App').then(module => {
-  const app = new module.App();
-  app.initialise();
+  window.addEventListener('load', () => {
+    const app = new module.App();
+    app.initialise();
+  });
 });
