@@ -1,0 +1,8 @@
+{{- define "response" -}}
+  {{- $products := getJSON (getenv "API_PRODUCTS_ENDPOINT") -}}
+  {{- $isFirst := true -}}
+  {{- range $products -}}
+  {{- if not $isFirst -}}, {{- end -}}{{- partial "item.json" . -}}
+  {{- $isFirst = false -}}
+  {{- end -}}
+{{- end -}}
