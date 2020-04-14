@@ -1,26 +1,27 @@
 import {Product} from './Product';
 import {View} from './View';
+import {Template} from 'hogan.js';
 
 export class ShoppingCart {
-  items = new Map<string, CartLine>();
+  lines = new Map<string, CartLine>();
   totalPrice = 0.0;
   view: View;
 
-  constructor(domSelector: string) {
-    this.view = new View(document.querySelector(domSelector) as Element);
+  constructor(domSelector: string, template: Template) {
+    this.view = new View(domSelector, template);
   }
 
   addProduct(item: Product, quantity = 1, note = '') {
     const line = new CartLine(item, quantity, note);
-    this.items.set(item.id, line);
+    this.lines.set(item.id, line);
     this.totalPrice += line.total;
-    this.view.updateValue('.total', this.totalPrice.toString());
+    this.view.update({lines: this.lines, totalPrice: this.totalPrice});
   }
 
   removeProduct(item: Product) {
-    this.items.delete(item.id);
+    this.lines.delete(item.id);
     this.totalPrice -= item.price;
-    this.view.updateValue('.total', this.totalPrice.toString());
+    this.view.update({lines: this.lines, totalPrice: this.totalPrice});
   }
 }
 
