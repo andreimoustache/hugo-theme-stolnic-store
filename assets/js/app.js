@@ -195,7 +195,7 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_4, con
 /* eslint-disable no-undef */
 System.import('src/App').then(function (module) {
     window.addEventListener('load', function () {
-        var app = new module.App(templates, 'https://mockapi.io/projects/5e94b4eef591cb0016d81529/product');
+        var app = new module.App(templates, '/index.json');
         app.initialise();
     });
 });
