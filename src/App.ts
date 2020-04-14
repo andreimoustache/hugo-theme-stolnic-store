@@ -1,18 +1,18 @@
 import {ShoppingCart} from './Models/ShoppingCart';
 import {Product} from './Models/Product';
+import {Template} from 'hogan.js';
 
 export class App {
   products: Map<string, Product>;
   shoppingCart: ShoppingCart;
   productsEndpoint: string;
 
-  constructor(
-    products = new Map<string, Product>(),
-    shoppingCart = new ShoppingCart('#shopping-cart'),
-    productsEndpoint = 'http://www.mocky.io/v2/5e946fc53100002d005e3155'
-  ) {
-    this.products = products;
-    this.shoppingCart = shoppingCart;
+  constructor(templates: Record<string, Template>, productsEndpoint: string) {
+    this.products = new Map<string, Product>();
+    this.shoppingCart = new ShoppingCart(
+      '#shopping-cart',
+      templates['shopping-cart']
+    );
     this.productsEndpoint = productsEndpoint;
   }
 
@@ -22,7 +22,9 @@ export class App {
   }
 
   getProducts(): Promise<Map<string, Product>> {
-    return fetch(this.productsEndpoint).then(r => r.json());
+    return fetch(this.productsEndpoint)
+      .then(r => r.json())
+      .catch(error => console.error(error));
   }
 
   bindToButtons() {

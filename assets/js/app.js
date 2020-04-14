@@ -67,16 +67,15 @@ System.register("src/Models/View", [], function (exports_2, context_2) {
         setters: [],
         execute: function () {
             View = /** @class */ (function () {
-                function View(element) {
-                    this.element = element;
+                function View(parentSelector, template) {
+                    this.element = document.querySelector(parentSelector);
+                    this.template = template;
+                    if (!this.element)
+                        throw Error("Couldn't find element for selector '" + parentSelector + "'.");
+                    this.element.innerHTML = this.template.render({});
                 }
-                View.prototype.updateValue = function (selector, value) {
-                    var el = this.element.querySelector(selector);
-                    if (!el) {
-                        console.error("No element found for " + selector + ".");
-                        return;
-                    }
-                    el.textContent = value;
+                View.prototype.update = function (props) {
+                    this.element.innerHTML = this.template.render(props);
                 };
                 return View;
             }());
@@ -96,23 +95,23 @@ System.register("src/Models/ShoppingCart", ["src/Models/View"], function (export
         ],
         execute: function () {
             ShoppingCart = /** @class */ (function () {
-                function ShoppingCart(domSelector) {
-                    this.items = new Map();
+                function ShoppingCart(domSelector, template) {
+                    this.lines = new Map();
                     this.totalPrice = 0.0;
-                    this.view = new View_1.View(document.querySelector(domSelector));
+                    this.view = new View_1.View(domSelector, template);
                 }
                 ShoppingCart.prototype.addProduct = function (item, quantity, note) {
                     if (quantity === void 0) { quantity = 1; }
                     if (note === void 0) { note = ''; }
                     var line = new CartLine(item, quantity, note);
-                    this.items.set(item.id, line);
+                    this.lines.set(item.id, line);
                     this.totalPrice += line.total;
-                    this.view.updateValue('.total', this.totalPrice.toString());
+                    this.view.update({ lines: this.lines, totalPrice: this.totalPrice });
                 };
                 ShoppingCart.prototype.removeProduct = function (item) {
-                    this.items.delete(item.id);
+                    this.lines.delete(item.id);
                     this.totalPrice -= item.price;
-                    this.view.updateValue('.total', this.totalPrice.toString());
+                    this.view.update({ lines: this.lines, totalPrice: this.totalPrice });
                 };
                 return ShoppingCart;
             }());
@@ -144,12 +143,9 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_4, con
         ],
         execute: function () {
             App = /** @class */ (function () {
-                function App(products, shoppingCart, productsEndpoint) {
-                    if (products === void 0) { products = new Map(); }
-                    if (shoppingCart === void 0) { shoppingCart = new ShoppingCart_1.ShoppingCart('#shopping-cart'); }
-                    if (productsEndpoint === void 0) { productsEndpoint = 'http://www.mocky.io/v2/5e946fc53100002d005e3155'; }
-                    this.products = products;
-                    this.shoppingCart = shoppingCart;
+                function App(templates, productsEndpoint) {
+                    this.products = new Map();
+                    this.shoppingCart = new ShoppingCart_1.ShoppingCart('#shopping-cart', templates['shopping-cart']);
                     this.productsEndpoint = productsEndpoint;
                 }
                 App.prototype.initialise = function () {
@@ -169,7 +165,9 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_4, con
                     });
                 };
                 App.prototype.getProducts = function () {
-                    return fetch(this.productsEndpoint).then(function (r) { return r.json(); });
+                    return fetch(this.productsEndpoint)
+                        .then(function (r) { return r.json(); })
+                        .catch(function (error) { return console.error(error); });
                 };
                 App.prototype.bindToButtons = function () {
                     var _this = this;
@@ -194,9 +192,10 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_4, con
         }
     };
 });
+/* eslint-disable no-undef */
 System.import('src/App').then(function (module) {
     window.addEventListener('load', function () {
-        var app = new module.App();
+        var app = new module.App(templates, 'https://mockapi.io/projects/5e94b4eef591cb0016d81529/product');
         app.initialise();
     });
 });
