@@ -1,39 +1,58 @@
 import {Product} from './Product';
 import {View} from './View';
+import {Template} from 'hogan.js';
+import {NumberRounder} from './NumberRounder';
+import {CartLine} from './CartLine';
 
 export class ShoppingCart {
-  items = new Map<string, CartLine>();
-  totalPrice = 0.0;
+  lines = new Map<string, CartLine>();
   view: View;
 
-  constructor(domSelector: string) {
-    this.view = new View(document.querySelector(domSelector) as Element);
+  get totalPrice(): number {
+    let price = 0.0;
+    for (const line of this.lines.values()) {
+      price += line.total;
+    }
+
+    return NumberRounder.toTwoDecimals(price);
+  }
+
+  get vm(): Record<string, object | number> {
+    const lines = [];
+    for (const line of this.lines.values()) {
+      lines.push({
+        name: line.item.name,
+        quantity: line.quantity,
+        price: line.item.price,
+      });
+    }
+
+    return {
+      totalPrice: this.totalPrice,
+      lines: lines,
+    };
+  }
+
+  constructor(domSelector: string, template: Template) {
+    this.view = new View(domSelector, template);
+    this.view.update({totalPrice: this.totalPrice});
   }
 
   addProduct(item: Product, quantity = 1, note = '') {
-    const line = new CartLine(item, quantity, note);
-    this.items.set(item.id, line);
-    this.totalPrice += line.total;
-    this.view.updateValue('.total', this.totalPrice.toString());
+    let line: CartLine;
+    if (this.lines.has(item.id)) {
+      line = this.lines.get(item.id) as CartLine;
+      line.quantity += quantity;
+    } else {
+      line = new CartLine(item, quantity, note);
+    }
+
+    this.lines.set(item.id, line);
+    this.view.update(this.vm);
   }
 
   removeProduct(item: Product) {
-    this.items.delete(item.id);
-    this.totalPrice -= item.price;
-    this.view.updateValue('.total', this.totalPrice.toString());
-  }
-}
-
-export class CartLine {
-  item: Product;
-  quantity: number;
-  total: number;
-  note: string;
-
-  constructor(item: Product, quantity = 0, note = '') {
-    this.item = item;
-    this.quantity = quantity;
-    this.note = note;
-    this.total = item.price * quantity;
+    this.lines.delete(item.id);
+    this.view.update(this.vm);
   }
 }

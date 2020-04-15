@@ -1,0 +1,14 @@
+"{{ .id }}": {
+  "id": "{{ .id }}",
+  "name": "{{ .name }}",
+  "description": "{{ .description }}",
+  "images": [
+  {{- range .images -}}
+    {
+      "url": "{{ .url }}",
+      "title": "{{ .title }}"
+    }
+  {{- end -}}
+  ],
+  "price": {{ .price }}
+}

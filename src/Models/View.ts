@@ -1,17 +1,20 @@
+import {Template} from 'hogan.js';
+
 export class View {
   element: Element;
+  template: Template;
 
-  constructor(element: Element) {
-    this.element = element;
+  constructor(parentSelector: string, template: Template) {
+    this.element = document.querySelector(parentSelector) as Element;
+    this.template = template;
+
+    if (!this.element)
+      throw Error(`Couldn't find element for selector '${parentSelector}'.`);
+
+    this.element.innerHTML = this.template.render({});
   }
 
-  updateValue(selector: string, value: string) {
-    const el = this.element.querySelector(selector);
-    if (!el) {
-      console.error(`No element found for ${selector}.`);
-      return;
-    }
-
-    el.textContent = value;
+  update(props: Record<string, boolean | string | number | object>) {
+    this.element.innerHTML = this.template.render(props);
   }
 }
