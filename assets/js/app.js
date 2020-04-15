@@ -1,4 +1,15 @@
 "use strict";
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,6 +46,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 System.register("src/Models/Product", [], function (exports_1, context_1) {
     "use strict";
     var Product;
@@ -43,13 +70,11 @@ System.register("src/Models/Product", [], function (exports_1, context_1) {
         setters: [],
         execute: function () {
             Product = /** @class */ (function () {
-                function Product(id, title, price, images) {
+                function Product(id, name, price, images) {
                     if (price === void 0) { price = 0.0; }
                     if (images === void 0) { images = []; }
-                    this.price = 0.0;
-                    this.images = [];
                     this.id = id;
-                    this.title = title;
+                    this.name = name;
                     this.price = price;
                     this.images = images;
                 }
@@ -83,58 +108,155 @@ System.register("src/Models/View", [], function (exports_2, context_2) {
         }
     };
 });
-System.register("src/Models/ShoppingCart", ["src/Models/View"], function (exports_3, context_3) {
+System.register("src/Models/NumberRounder", [], function (exports_3, context_3) {
     "use strict";
-    var View_1, ShoppingCart, CartLine;
+    var NumberRounder;
     var __moduleName = context_3 && context_3.id;
+    return {
+        setters: [],
+        execute: function () {
+            exports_3("NumberRounder", NumberRounder = {
+                toTwoDecimals: function (n) {
+                    return Math.round((n + Number.EPSILON) * 100) / 100;
+                },
+            });
+        }
+    };
+});
+System.register("src/Models/CartLine", ["src/Models/NumberRounder"], function (exports_4, context_4) {
+    "use strict";
+    var NumberRounder_1, CartLine;
+    var __moduleName = context_4 && context_4.id;
+    return {
+        setters: [
+            function (NumberRounder_1_1) {
+                NumberRounder_1 = NumberRounder_1_1;
+            }
+        ],
+        execute: function () {
+            CartLine = /** @class */ (function () {
+                function CartLine(item, quantity, note) {
+                    if (quantity === void 0) { quantity = 1; }
+                    if (note === void 0) { note = ''; }
+                    this.item = item;
+                    this.quantity = quantity;
+                    this.note = note;
+                }
+                Object.defineProperty(CartLine.prototype, "total", {
+                    get: function () {
+                        return NumberRounder_1.NumberRounder.toTwoDecimals(this.quantity * this.item.price);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                return CartLine;
+            }());
+            exports_4("CartLine", CartLine);
+        }
+    };
+});
+System.register("src/Models/ShoppingCart", ["src/Models/View", "src/Models/NumberRounder", "src/Models/CartLine"], function (exports_5, context_5) {
+    "use strict";
+    var View_1, NumberRounder_2, CartLine_1, ShoppingCart;
+    var __moduleName = context_5 && context_5.id;
     return {
         setters: [
             function (View_1_1) {
                 View_1 = View_1_1;
+            },
+            function (NumberRounder_2_1) {
+                NumberRounder_2 = NumberRounder_2_1;
+            },
+            function (CartLine_1_1) {
+                CartLine_1 = CartLine_1_1;
             }
         ],
         execute: function () {
             ShoppingCart = /** @class */ (function () {
                 function ShoppingCart(domSelector, template) {
                     this.lines = new Map();
-                    this.totalPrice = 0.0;
                     this.view = new View_1.View(domSelector, template);
+                    this.view.update({ totalPrice: this.totalPrice });
                 }
+                Object.defineProperty(ShoppingCart.prototype, "totalPrice", {
+                    get: function () {
+                        var e_1, _a;
+                        var price = 0.0;
+                        try {
+                            for (var _b = __values(this.lines.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                                var line = _c.value;
+                                price += line.total;
+                            }
+                        }
+                        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                        finally {
+                            try {
+                                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                            }
+                            finally { if (e_1) throw e_1.error; }
+                        }
+                        return NumberRounder_2.NumberRounder.toTwoDecimals(price);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(ShoppingCart.prototype, "vm", {
+                    get: function () {
+                        var e_2, _a;
+                        var lines = [];
+                        try {
+                            for (var _b = __values(this.lines.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                                var line = _c.value;
+                                lines.push({
+                                    name: line.item.name,
+                                    quantity: line.quantity,
+                                    price: line.item.price,
+                                });
+                            }
+                        }
+                        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                        finally {
+                            try {
+                                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                            }
+                            finally { if (e_2) throw e_2.error; }
+                        }
+                        return {
+                            totalPrice: this.totalPrice,
+                            lines: lines,
+                        };
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 ShoppingCart.prototype.addProduct = function (item, quantity, note) {
                     if (quantity === void 0) { quantity = 1; }
                     if (note === void 0) { note = ''; }
-                    var line = new CartLine(item, quantity, note);
+                    var line;
+                    if (this.lines.has(item.id)) {
+                        line = this.lines.get(item.id);
+                        line.quantity += quantity;
+                    }
+                    else {
+                        line = new CartLine_1.CartLine(item, quantity, note);
+                    }
                     this.lines.set(item.id, line);
-                    this.totalPrice += line.total;
-                    this.view.update({ lines: this.lines, totalPrice: this.totalPrice });
+                    this.view.update(this.vm);
                 };
                 ShoppingCart.prototype.removeProduct = function (item) {
                     this.lines.delete(item.id);
-                    this.totalPrice -= item.price;
-                    this.view.update({ lines: this.lines, totalPrice: this.totalPrice });
+                    this.view.update(this.vm);
                 };
                 return ShoppingCart;
             }());
-            exports_3("ShoppingCart", ShoppingCart);
-            CartLine = /** @class */ (function () {
-                function CartLine(item, quantity, note) {
-                    if (quantity === void 0) { quantity = 0; }
-                    if (note === void 0) { note = ''; }
-                    this.item = item;
-                    this.quantity = quantity;
-                    this.note = note;
-                    this.total = item.price * quantity;
-                }
-                return CartLine;
-            }());
-            exports_3("CartLine", CartLine);
+            exports_5("ShoppingCart", ShoppingCart);
         }
     };
 });
-System.register("src/App", ["src/Models/ShoppingCart"], function (exports_4, context_4) {
+System.register("src/App", ["src/Models/ShoppingCart"], function (exports_6, context_6) {
     "use strict";
     var ShoppingCart_1, App;
-    var __moduleName = context_4 && context_4.id;
+    var __moduleName = context_6 && context_6.id;
     return {
         setters: [
             function (ShoppingCart_1_1) {
@@ -170,25 +292,35 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_4, con
                         .catch(function (error) { return console.error(error); });
                 };
                 App.prototype.bindToButtons = function () {
+                    var e_3, _a;
                     var _this = this;
-                    var _a;
+                    var _b;
                     var _loop_1 = function (id, product) {
                         var productCard = document.querySelector("[data-product-id=\"" + id + "\"]");
-                        (_a = productCard === null || productCard === void 0 ? void 0 : productCard.querySelector('.add-to-cart')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', function () {
+                        (_b = productCard === null || productCard === void 0 ? void 0 : productCard.querySelector('.add-to-cart')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', function () {
                             var _a, _b;
                             var quantity = (_a = productCard.querySelector('.quantity')) === null || _a === void 0 ? void 0 : _a.textContent;
                             var note = (_b = productCard.querySelector('.note')) === null || _b === void 0 ? void 0 : _b.textContent;
                             _this.shoppingCart.addProduct(product, parseInt(quantity, 10), note);
                         });
                     };
-                    for (var _i = 0, _b = Object.entries(this.products); _i < _b.length; _i++) {
-                        var _c = _b[_i], id = _c[0], product = _c[1];
-                        _loop_1(id, product);
+                    try {
+                        for (var _c = __values(Object.entries(this.products)), _d = _c.next(); !_d.done; _d = _c.next()) {
+                            var _e = __read(_d.value, 2), id = _e[0], product = _e[1];
+                            _loop_1(id, product);
+                        }
+                    }
+                    catch (e_3_1) { e_3 = { error: e_3_1 }; }
+                    finally {
+                        try {
+                            if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
+                        }
+                        finally { if (e_3) throw e_3.error; }
                     }
                 };
                 return App;
             }());
-            exports_4("App", App);
+            exports_6("App", App);
         }
     };
 });

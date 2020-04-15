@@ -1,40 +1,58 @@
 import {Product} from './Product';
 import {View} from './View';
 import {Template} from 'hogan.js';
+import {NumberRounder} from './NumberRounder';
+import {CartLine} from './CartLine';
 
 export class ShoppingCart {
   lines = new Map<string, CartLine>();
-  totalPrice = 0.0;
   view: View;
+
+  get totalPrice(): number {
+    let price = 0.0;
+    for (const line of this.lines.values()) {
+      price += line.total;
+    }
+
+    return NumberRounder.toTwoDecimals(price);
+  }
+
+  get vm(): Record<string, object | number> {
+    const lines = [];
+    for (const line of this.lines.values()) {
+      lines.push({
+        name: line.item.name,
+        quantity: line.quantity,
+        price: line.item.price,
+      });
+    }
+
+    return {
+      totalPrice: this.totalPrice,
+      lines: lines,
+    };
+  }
 
   constructor(domSelector: string, template: Template) {
     this.view = new View(domSelector, template);
+    this.view.update({totalPrice: this.totalPrice});
   }
 
   addProduct(item: Product, quantity = 1, note = '') {
-    const line = new CartLine(item, quantity, note);
+    let line: CartLine;
+    if (this.lines.has(item.id)) {
+      line = this.lines.get(item.id) as CartLine;
+      line.quantity += quantity;
+    } else {
+      line = new CartLine(item, quantity, note);
+    }
+
     this.lines.set(item.id, line);
-    this.totalPrice += line.total;
-    this.view.update({lines: this.lines, totalPrice: this.totalPrice});
+    this.view.update(this.vm);
   }
 
   removeProduct(item: Product) {
     this.lines.delete(item.id);
-    this.totalPrice -= item.price;
-    this.view.update({lines: this.lines, totalPrice: this.totalPrice});
-  }
-}
-
-export class CartLine {
-  item: Product;
-  quantity: number;
-  total: number;
-  note: string;
-
-  constructor(item: Product, quantity = 0, note = '') {
-    this.item = item;
-    this.quantity = quantity;
-    this.note = note;
-    this.total = item.price * quantity;
+    this.view.update(this.vm);
   }
 }
