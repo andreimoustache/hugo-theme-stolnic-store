@@ -1,12 +1,14 @@
+<div class="card-header">
+  <div class="card-header-title">Cart</div>
+</div>
 <div class="card-content">
-  <div class="card-header">
-    <div class="card-header-title">Cart</div>
-  </div>
   <div class="content">
     {{#lines.length}}
     <ul class="cart-content">
     {{#lines}}
-      <li>{{item.name}} x {{quantity}}</li>
+      <li>
+        {{quantity}} x {{name}} ... {{price}}
+      </li>
     {{/lines}}
     </ul>
     {{/lines.length}}
