@@ -33,8 +33,9 @@ export class App {
       productCard
         ?.querySelector('.add-to-cart')
         ?.addEventListener('click', () => {
-          const quantity = productCard.querySelector('.quantity')
-            ?.textContent as string;
+          const quantity = (productCard.querySelector(
+            '.quantity'
+          ) as HTMLInputElement).value;
           const note = productCard.querySelector('.note')
             ?.textContent as string;
           this.shoppingCart.addProduct(product, parseInt(quantity, 10), note);

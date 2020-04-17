@@ -298,9 +298,10 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_6, con
                     var _loop_1 = function (id, product) {
                         var productCard = document.querySelector("[data-product-id=\"" + id + "\"]");
                         (_b = productCard === null || productCard === void 0 ? void 0 : productCard.querySelector('.add-to-cart')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', function () {
-                            var _a, _b;
-                            var quantity = (_a = productCard.querySelector('.quantity')) === null || _a === void 0 ? void 0 : _a.textContent;
-                            var note = (_b = productCard.querySelector('.note')) === null || _b === void 0 ? void 0 : _b.textContent;
+                            var _a;
+                            var quantity = productCard.querySelector('.quantity').value;
+                            var note = (_a = productCard.querySelector('.note')) === null || _a === void 0 ? void 0 : _a.textContent;
+                            debugger;
                             _this.shoppingCart.addProduct(product, parseInt(quantity, 10), note);
                         });
                     };

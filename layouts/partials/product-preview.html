@@ -23,7 +23,9 @@
     <div class="content">{{ .description }}</div>
   </div>
   <div class="card-footer">
-    <span class="card-footer-item quantity">1</span>
+    <div class="card-footer-item is-paddingless">
+      <input type="number" class="input quantity" value="1" step="1" min="1" />
+    </div>
     <a class="card-footer-item add-to-cart">Add to cart</a>
   </div>
 </div>
