@@ -25,7 +25,14 @@
         </div>
       </div>
       <div class="column is-one-quarter">
-        {{ partial "shopping-cart" }}
+        <div class="columns is-multiline">
+          <div class="column is-full">
+            {{ partial "shopping-cart" }}
+          </div>
+          <div class="column is-full">
+            {{ partial "order-details" . }}
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -301,7 +301,6 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_6, con
                             var _a;
                             var quantity = productCard.querySelector('.quantity').value;
                             var note = (_a = productCard.querySelector('.note')) === null || _a === void 0 ? void 0 : _a.textContent;
-                            debugger;
                             _this.shoppingCart.addProduct(product, parseInt(quantity, 10), note);
                         });
                     };
