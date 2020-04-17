@@ -272,24 +272,27 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_6, con
                 }
                 App.prototype.initialise = function () {
                     return __awaiter(this, void 0, void 0, function () {
-                        var _a;
-                        return __generator(this, function (_b) {
-                            switch (_b.label) {
-                                case 0:
-                                    _a = this;
-                                    return [4 /*yield*/, this.getProducts()];
-                                case 1:
-                                    _a.products = _b.sent();
-                                    this.bindToButtons();
-                                    return [2 /*return*/];
-                            }
+                        return __generator(this, function (_a) {
+                            this.products = this.getProducts();
+                            this.bindToButtons();
+                            return [2 /*return*/];
                         });
                     });
                 };
                 App.prototype.getProducts = function () {
-                    return fetch(this.productsEndpoint)
-                        .then(function (r) { return r.json(); })
-                        .catch(function (error) { return console.error(error); });
+                    var products = new Map();
+                    document.querySelectorAll('[data-product-id]').forEach(function (el) {
+                        var product = {
+                            id: el.dataset.productId,
+                            name: el.dataset.productName,
+                            price: parseFloat(el.dataset.productPrice || ''),
+                            images: [],
+                        };
+                        if (!product.id || !product.name || !product.price)
+                            return;
+                        products.set(product.id, product);
+                    });
+                    return products;
                 };
                 App.prototype.bindToButtons = function () {
                     var e_3, _a;
@@ -305,7 +308,7 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_6, con
                         });
                     };
                     try {
-                        for (var _c = __values(Object.entries(this.products)), _d = _c.next(); !_d.done; _d = _c.next()) {
+                        for (var _c = __values(this.products.entries()), _d = _c.next(); !_d.done; _d = _c.next()) {
                             var _e = __read(_d.value, 2), id = _e[0], product = _e[1];
                             _loop_1(id, product);
                         }

@@ -1,4 +1,9 @@
-<div class="card product" data-product-id="{{ .id }}">
+<div
+  class="card product"
+  data-product-id="{{ .id }}"
+  data-product-name="{{ .name }}"
+  data-product-price="{{ .price }}"
+>
   <div class="card-image">
     <figure class="image is-4by3">
       {{- range .images -}}

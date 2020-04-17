@@ -61,7 +61,7 @@ declare module "src/App" {
         productsEndpoint: string;
         constructor(templates: Record<string, Template>, productsEndpoint: string);
         initialise(): Promise<void>;
-        getProducts(): Promise<Map<string, Product>>;
+        getProducts(): Map<string, Product>;
         bindToButtons(): void;
     }
 }
