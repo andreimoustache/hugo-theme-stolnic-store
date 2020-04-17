@@ -16,6 +16,7 @@
 
   {{ $styles := resources.Get "css/stolnic.css" | minify | fingerprint "md5" }}
   <link rel="stylesheet" href="{{ $styles.Permalink }}" media="screen">
+  <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@500&family=Sansita:ital,wght@1,700&display=swap" rel="stylesheet">
 
   <script src="https://unpkg.com/systemjs@6.3.0/dist/s.min.js"></script>
   <script src="https://unpkg.com/systemjs@6.3.0/dist/extras/named-register.min.js"></script>
