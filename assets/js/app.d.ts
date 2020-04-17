@@ -51,17 +51,31 @@ declare module "src/Models/ShoppingCart" {
         removeProduct(item: Product): void;
     }
 }
+declare module "src/Models/Order" {
+    import { CartLine } from "src/Models/CartLine";
+    export class Order {
+        name: string;
+        email: string;
+        telephone: string;
+        items: Map<string, CartLine>;
+        constructor(name: string, email: string, telephone: string, items: Map<string, CartLine>);
+        submit(): Promise<unknown>;
+    }
+}
 declare module "src/App" {
     import { ShoppingCart } from "src/Models/ShoppingCart";
     import { Product } from "src/Models/Product";
     import { Template } from 'hogan.js';
     export class App {
+        productsEndpoint: string;
+        apiUrl: string;
         products: Map<string, Product>;
         shoppingCart: ShoppingCart;
-        productsEndpoint: string;
-        constructor(templates: Record<string, Template>, productsEndpoint: string);
+        constructor(templates: Record<string, Template>, productsEndpoint: string, apiUrl: string);
         initialise(): Promise<void>;
         getProducts(): Map<string, Product>;
+        private _bindCartButtons;
+        private _bindOrderButton;
         bindToButtons(): void;
     }
 }

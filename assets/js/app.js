@@ -253,19 +253,47 @@ System.register("src/Models/ShoppingCart", ["src/Models/View", "src/Models/Numbe
         }
     };
 });
-System.register("src/App", ["src/Models/ShoppingCart"], function (exports_6, context_6) {
+System.register("src/Models/Order", [], function (exports_6, context_6) {
     "use strict";
-    var ShoppingCart_1, App;
+    var Order;
     var __moduleName = context_6 && context_6.id;
+    return {
+        setters: [],
+        execute: function () {
+            Order = /** @class */ (function () {
+                function Order(name, email, telephone, items) {
+                    this.name = name;
+                    this.email = email;
+                    this.telephone = telephone;
+                    this.items = items;
+                }
+                Order.prototype.submit = function () {
+                    return Promise.reject();
+                };
+                return Order;
+            }());
+            exports_6("Order", Order);
+        }
+    };
+});
+System.register("src/App", ["src/Models/ShoppingCart", "src/Models/Order"], function (exports_7, context_7) {
+    "use strict";
+    var ShoppingCart_1, Order_1, App;
+    var __moduleName = context_7 && context_7.id;
     return {
         setters: [
             function (ShoppingCart_1_1) {
                 ShoppingCart_1 = ShoppingCart_1_1;
+            },
+            function (Order_1_1) {
+                Order_1 = Order_1_1;
             }
         ],
         execute: function () {
             App = /** @class */ (function () {
-                function App(templates, productsEndpoint) {
+                function App(templates, productsEndpoint, apiUrl) {
+                    this.productsEndpoint = productsEndpoint;
+                    this.apiUrl = apiUrl;
                     this.products = new Map();
                     this.shoppingCart = new ShoppingCart_1.ShoppingCart('#shopping-cart', templates['shopping-cart']);
                     this.productsEndpoint = productsEndpoint;
@@ -294,43 +322,54 @@ System.register("src/App", ["src/Models/ShoppingCart"], function (exports_6, con
                     });
                     return products;
                 };
+                App.prototype._bindCartButtons = function (id, product) {
+                    var _this = this;
+                    var _a;
+                    var productCard = document.querySelector("[data-product-id=\"" + id + "\"]");
+                    (_a = productCard === null || productCard === void 0 ? void 0 : productCard.querySelector('.add-to-cart')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', function () {
+                        var _a;
+                        var quantity = productCard.querySelector('.quantity').value;
+                        var note = (_a = productCard.querySelector('.note')) === null || _a === void 0 ? void 0 : _a.textContent;
+                        _this.shoppingCart.addProduct(product, parseInt(quantity, 10), note);
+                    });
+                };
+                App.prototype._bindOrderButton = function () {
+                    var _this = this;
+                    var _a;
+                    var orderCard = document.querySelector('.order-details');
+                    (_a = orderCard === null || orderCard === void 0 ? void 0 : orderCard.querySelector('.send-order')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        var order = new Order_1.Order(orderCard.querySelector('.name').value, orderCard.querySelector('.email').value, orderCard.querySelector('.telephone').value, _this.shoppingCart.lines);
+                        order.submit();
+                    });
+                };
                 App.prototype.bindToButtons = function () {
                     var e_3, _a;
-                    var _this = this;
-                    var _b;
-                    var _loop_1 = function (id, product) {
-                        var productCard = document.querySelector("[data-product-id=\"" + id + "\"]");
-                        (_b = productCard === null || productCard === void 0 ? void 0 : productCard.querySelector('.add-to-cart')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', function () {
-                            var _a;
-                            var quantity = productCard.querySelector('.quantity').value;
-                            var note = (_a = productCard.querySelector('.note')) === null || _a === void 0 ? void 0 : _a.textContent;
-                            _this.shoppingCart.addProduct(product, parseInt(quantity, 10), note);
-                        });
-                    };
                     try {
-                        for (var _c = __values(this.products.entries()), _d = _c.next(); !_d.done; _d = _c.next()) {
-                            var _e = __read(_d.value, 2), id = _e[0], product = _e[1];
-                            _loop_1(id, product);
+                        for (var _b = __values(this.products.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                            var _d = __read(_c.value, 2), id = _d[0], product = _d[1];
+                            this._bindCartButtons(id, product);
                         }
                     }
                     catch (e_3_1) { e_3 = { error: e_3_1 }; }
                     finally {
                         try {
-                            if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
+                            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
                         }
                         finally { if (e_3) throw e_3.error; }
                     }
+                    this._bindOrderButton();
                 };
                 return App;
             }());
-            exports_6("App", App);
+            exports_7("App", App);
         }
     };
 });
 /* eslint-disable no-undef */
 System.import('src/App').then(function (module) {
     window.addEventListener('load', function () {
-        var app = new module.App(templates, '/index.json');
+        var app = new module.App(templates, '/index.json', 'https://5e94b4eef591cb0016d81528.mockapi.io');
         app.initialise();
     });
 });
