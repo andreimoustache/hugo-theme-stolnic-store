@@ -24,6 +24,7 @@
     "@types/hogan.js": "^3.0.0",
     "@types/node": "^10.0.3",
     "@types/systemjs": "^6.1.0",
+    "animate.css": "^3.7.2",
     "bulma": "^0.8.1",
     "gts": "^2.0.0",
     "hogan.js": "^3.0.2",

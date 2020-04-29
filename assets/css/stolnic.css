@@ -71,6 +71,7 @@
 /*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
 html,
 body,
+p,
 ul,
 li,
 figure,
@@ -321,7 +322,7 @@ pre code {
 .content li + li {
   margin-top: 0.25em;
 }
-
+.content p:not(:last-child),
 .content ul:not(:last-child),
 .content pre:not(:last-child) {
   margin-bottom: 1em;
@@ -883,6 +884,62 @@ pre code {
 
 .content {
   font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+ .is-animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+@media (print), (prefers-reduced-motion: reduce) {
+   .is-animated {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+@keyframes slideInLeft {
+  from {
+    transform: translate3d(-100%, 0, 0);
+    visibility: visible;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+ .slides-in-left {
+  animation-name: slideInLeft;
+}
+
+.has-delayed-animations *:nth-child(1) {
+  animation-delay: 80ms;
+}
+.has-delayed-animations *:nth-child(2) {
+  animation-delay: 160ms;
+}
+.has-delayed-animations *:nth-child(3) {
+  animation-delay: 240ms;
+}
+.has-delayed-animations *:nth-child(4) {
+  animation-delay: 320ms;
+}
+.has-delayed-animations *:nth-child(5) {
+  animation-delay: 400ms;
+}
+.has-delayed-animations *:nth-child(6) {
+  animation-delay: 480ms;
+}
+.has-delayed-animations *:nth-child(7) {
+  animation-delay: 560ms;
+}
+.has-delayed-animations *:nth-child(8) {
+  animation-delay: 640ms;
+}
+.has-delayed-animations *:nth-child(9) {
+  animation-delay: 720ms;
+}
+.has-delayed-animations *:nth-child(10) {
+  animation-delay: 800ms;
 }
 
 /*# sourceMappingURL=stolnic.css.map */

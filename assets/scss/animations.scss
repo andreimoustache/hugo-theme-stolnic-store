@@ -1,0 +1,23 @@
+@charset "utf-8";
+
+@import "../../node_modules/animate.css/source/_base";
+@import "../../node_modules/animate.css/source/sliding_entrances/slideInLeft";
+
+.has-delayed-animations {
+  @for $i from 1 through 10 {
+    $delay-ms: $i * 50ms;
+
+    *:nth-child(#{$i}) {
+      animation-delay: $delay-ms;
+    }
+  }
+}
+
+
+.is-animated {
+  @extend .animated;
+}
+
+.slides-in-left {
+  @extend .slideInLeft;
+}
