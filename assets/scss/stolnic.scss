@@ -14,3 +14,10 @@
 
 @import "./typography.scss";
 @import "./animations.scss";
+
+.footer { 
+  .logo {
+    object-fit: contain;
+    height: 4rem;
+  }
+}
