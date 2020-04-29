@@ -230,6 +230,10 @@ pre code {
   font-size: 1rem !important;
 }
 
+.has-background-light {
+  background-color: whitesmoke !important;
+}
+
 .is-family-secondary {
   font-family: "Inknut Antiqua" !important;
 }

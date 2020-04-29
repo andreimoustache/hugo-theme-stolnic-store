@@ -1,16 +1,5 @@
 {{ define "main" }}
 
-<section class="section">
-  <div class="container">
-    <div class="hero">
-      <div class="hero-body">
-        <h1 class="title">{{ .Title }}</h1>
-        <h2 class="subtitle is-family-secondary">{{ .Site.Params.subtitle | markdownify }}</h2>
-      </div>
-    </div>
-  </div>
-</section>
-
 {{- $products := getJSON (getenv "API_PRODUCTS_ENDPOINT") -}}
 <section class="section">
   <div class="container">
